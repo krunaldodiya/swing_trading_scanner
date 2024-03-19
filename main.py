@@ -56,7 +56,7 @@ def main():
     st.title("Swing Trading Stock Scanner")
     st.write(
         "This tool scans stocks based on the following conditions:\n"
-        "1) ADX > 25\n"
+        "1) ADX > 20\n"
         "2) RSI between 30 and 70\n"
         "3) SMA7 Crossunder SMA14"
     )
@@ -66,8 +66,9 @@ def main():
         with open("stocks.json", "r") as file:
             stocks_json = json.load(file)
             stocks = [stock for stock in stocks_json]
+            stock_list = ", ".join(stocks)
 
-        st.info("Loaded stocks from stocks.json")
+        st.info(f"Loaded stocks: {stock_list}")
 
     except FileNotFoundError:
         st.error("Stocks file (stocks.json) not found.")
