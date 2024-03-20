@@ -61,9 +61,11 @@ async def fetch_stock_data(stock, start_date, end_date):
 
     return pd.DataFrame()
 
-async def scan_stocks_async(stocks, start_date, end_date):
+async def scan_stocks_async(stocks, start_date, end_date, scanning_placeholder):
+    scanning_placeholder.info("Scanning...")
     tasks = [fetch_stock_data(stock, start_date, end_date) for stock in stocks]
     results = await asyncio.gather(*tasks)
+    scanning_placeholder.empty()
     return pd.concat(results)
 
 def main():
@@ -96,8 +98,8 @@ def main():
     end_date = st.date_input("Select end date", datetime.today())
 
     if st.button("Scan"):
-        st.info("Scanning...")
-        matched_stocks = asyncio.run(scan_stocks_async(stocks, start_date, end_date))
+        scanning_placeholder = st.empty()
+        matched_stocks = asyncio.run(scan_stocks_async(stocks, start_date, end_date, scanning_placeholder))
 
         # Display results
         if not matched_stocks.empty:
@@ -107,6 +109,8 @@ def main():
             st.dataframe(matched_stocks)
         else:
             st.info("No stocks matched the conditions for yesterday.")
+
+        scanning_placeholder.info("Scan Completed!")
 
 if __name__ == "__main__":
     main()
